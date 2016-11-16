@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AACE,eAAO;EACL,OAAO,EAAE,KAAK;EACd,OAAO,EAAG,EAAE;EACZ,KAAK,EAAG,CAAC;EACT,MAAM,EAAE,CAAC;EACT,KAAK,EAAE,IAAI",
+"sources": ["commen.scss"],
+"names": [],
+"file": "commen.css"
+}

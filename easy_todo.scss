@@ -1,0 +1,55 @@
+@import "css/reset";
+@import "css/commen";
+
+$bgColor: #a0a0a0;
+$fontColor: #eee;
+
+#easyTodo{
+  max-width: 500px;
+  padding: 10px;
+  margin: 0 auto;
+
+  border: 1px solid $bgColor;
+  border-radius: 3px;
+}
+
+input{
+  width: 200px;
+  height: 20px;
+  padding: 10px;
+  line-height: 20px;
+  font-size: 15px;
+  color: #333;
+
+  &:focus{
+    outline: 1px solid orangered;
+  }
+}
+
+.todoList{
+  padding-left: 10px;
+
+  li{
+    margin-top: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px dotted #eee;
+    position: relative;
+  }
+
+  span{
+    position: relative;
+    display: inline-block;
+    font-size: 0.1rem;
+    top: -5px;
+    right: -10px;
+    color: #999;
+
+    cursor: pointer;
+  }
+}
+
+
+
+
+
+

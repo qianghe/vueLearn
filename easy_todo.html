@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="easy_todo.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="lib/vue.js"></script>
+    <meta charset="UTF-8">
+    <title>vue_example_easyTodo</title>
+</head>
+<body>
+<div id="easyTodo">
+    <input @keyup.enter="addNewTodo" v-model="newTodoText" placeholder="add something..."/>
+    <ul class="todoList">
+        <li is="todo-item" v-for="(todo,index) in todos" v-bind:title="todo" v-on:remove="removeTodo(index,$event)"></li>
+    </ul>
+</div>
+</body>
+<script>
+    Vue.component('todo-item', {
+        template: '\
+       <li>\
+         {{ title }}\
+         <span v-on:click="$emit(\'remove\')">X</span>\
+       </li>\
+     ',
+        props: ['title'],
+    })
+    ;
+
+    new Vue({
+        el: '#easyTodo',
+        data: {
+            newTodoText: '',
+            todos: [
+                'write an article',
+                'make a plan for travle',
+                'cook a big dinner for family'
+            ]
+        },
+        methods: {
+            addNewTodo: function () {
+                this.todos.push(this.newTodoText);
+                this.newTodoText = '';
+            },
+            removeTodo: function(index,event){
+                console.log(index);
+                this.todos.splice(index,1);
+            }
+        }
+    })
+</script>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script type="text/javascript" src="lib/vue.js"></script>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <p>{{message | capitalize}}</p>
+    <div v-html="rawHtml"></div>
+    <button v-bind:disabled="someDynamicCondition">Button</button>
+    <div class="static" v-bind:class="{ active: isActive, 'text-danger': hasError }">
+        123
+    </div>
+</div>
+
+<div id="app1">
+    <p>{{message}}</p>
+    <button v-on:click="reverseText">Reverse Text</button>
+</div>
+
+<div id="app2">
+    <todo-item v-for="todo in todos" v-bind:todo="todo"></todo-item>
+</div>
+
+<div id="app3">
+    <input type="radio" id="one" value="One" v-model="picked">
+    <label for="one">One</label>
+    <br>
+    <input type="radio" id="two" value="Two" v-model="picked">
+    <label for="two">Two</label>
+    <br>
+    <span>Picked: {{ picked }}</span>
+</div>
+
+<div id="app4">
+    <select v-model="sel">
+        <option v-for="option in options" v-bind:value="option.value">
+            {{ option.text }}
+        </option>
+    </select>
+    <span>Selected: {{ sel }}</span>
+</div>
+
+<div id="app5">
+    <currency-input v-model="price"></currency-input>
+</div>
+</body>
+<script type="text/javascript">
+    new Vue({
+        el: '#app',
+        data: {
+            message: 'hello world!',
+            rawHtml: '<p>you are a bad girl.</p>',
+            someDynamicCondition: true,
+            isActive: false,
+            hasError: true
+        },
+        filters: {
+            capitalize: function (value) {
+                if (!value) return '';
+
+                value = value.toString()
+                return value.charAt(0).toUpperCase() + value.slice(1)
+            }
+        }
+    });
+
+    var app1 = new Vue({
+        el: '#app1',
+        data: {
+            message: 'Nice to meet you'
+        },
+        methods: {
+            reverseText: function () {
+                this.message = this.message.split(' ').reverse().join(' ');
+            }
+        }
+    })
+
+
+    Vue.component('todo-item', {
+        props: ['todo'],
+        template: '<li>{{todo.text}}</li>'
+    });
+
+    var app2 = new Vue({
+        el: '#app2',
+        data: {
+            todos: [
+                {text: 'write an article'},
+                {text: 'read a funny book'},
+                {text: 'say hello to a pretty girl'}
+            ]
+        }
+    });
+
+    var app3 = new Vue({
+        el: '#app3',
+        data: {
+            picked: 'no choice'
+        },
+        methods: {
+            changeSelected: function (event) {
+                alert('you choose me');
+                alert(event.target.tagName);
+            }
+        }
+    });
+
+    var app4 = new Vue({
+        el: '#app4',
+        data: {
+            sel: 'A',
+            options: [
+                {text: 'one', value: 'A'},
+                {text: 'two', value: 'B'},
+                {text: 'three', value: 'C'}
+            ]
+        }
+    })
+
+    Vue.component('currency-input', {
+        template: '\
+    <span>\
+      $\
+      <input\
+        ref="input"\
+        v-bind:value="value"\
+        v-on:input="updateValue($event.target.value)"\
+      >\
+    </span>\
+  ',
+        props: ['value'],
+        methods: {
+            // Instead of updating the value directly, this
+            // method is used to format and place constraints
+            // on the input's value
+            updateValue: function (value) {
+                var formattedValue = value
+                // Remove whitespace on either side
+                        .trim()
+                        // Shorten to 2 decimal places
+                        .slice(0, value.indexOf('.') + 3)
+                // If the value was not already normalized,
+                // manually override it to conform
+                if (formattedValue !== value) {
+                    this.$refs.input.value = formattedValue
+                }
+                // Emit the number value through the input event
+                this.$emit('input', Number(formattedValue))
+            }
+        }
+    })
+
+    new Vue({
+        el: '#app5'
+    })
+
+</script>
+</html>
