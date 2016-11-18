@@ -1,0 +1,70 @@
+@import "../css/reset";
+@import "../css/commen";
+
+$bgColor : #dcefe5;
+$itemDefaultColor : #aaaec2;
+$itemSelectedColor : #c59eb5;
+$fontColor : #fff;
+
+#serviceCounter{
+  width: 600px;
+  height: 450px;
+  padding: 15px;
+  margin: 0 auto;
+
+  background-color: $bgColor;
+  color: $fontColor;
+  font-size: 20px;
+  text-align: center;
+
+  h1{
+    color: $itemDefaultColor;
+    font-size: 24px;
+  }
+
+}
+
+.counterItem{
+  width: 500px;
+  line-height: 60px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+  background-color: $itemDefaultColor;
+  cursor: pointer;
+
+  span{
+    display: block;
+  }
+
+  .itemLabel{
+    float: left;
+    margin-left: 20px;
+  }
+
+  .itemPrice{
+    float: right;
+    margin-right: 20px;
+  }
+
+  &:nth-last-of-type(1){
+    margin-bottom: 20px;
+  }
+}
+
+.totalCounter{
+  widht: 100%;
+  box-sizing: border-box;
+  padding: 20px 100px 0 0;
+
+  color: $itemSelectedColor;
+  text-align: right;
+  border-top: 2px solid #fff;
+}
+
+.selectedItem{
+  background-color: $itemSelectedColor;
+}
+
+
+

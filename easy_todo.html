@@ -22,9 +22,8 @@
          <span v-on:click="$emit(\'remove\')">X</span>\
        </li>\
      ',
-        props: ['title'],
-    })
-    ;
+        props: ['title']
+    });
 
     new Vue({
         el: '#easyTodo',
@@ -42,7 +41,6 @@
                 this.newTodoText = '';
             },
             removeTodo: function(index,event){
-                console.log(index);
                 this.todos.splice(index,1);
             }
         }

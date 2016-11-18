@@ -1,0 +1,59 @@
+body, ul,
+h1 ~ h5, p {
+  padding: 0;
+  margin: 0; }
+
+ul {
+  list-style: none; }
+
+.clearfix:after {
+  display: block;
+  content: '';
+  width: 0;
+  height: 0;
+  clear: both; }
+
+#serviceCounter {
+  width: 600px;
+  height: 450px;
+  padding: 15px;
+  margin: 0 auto;
+  background-color: #dcefe5;
+  color: #fff;
+  font-size: 20px;
+  text-align: center; }
+  #serviceCounter h1 {
+    color: #aaaec2;
+    font-size: 24px; }
+
+.counterItem {
+  width: 500px;
+  line-height: 60px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+  background-color: #aaaec2;
+  cursor: pointer; }
+  .counterItem span {
+    display: block; }
+  .counterItem .itemLabel {
+    float: left;
+    margin-left: 20px; }
+  .counterItem .itemPrice {
+    float: right;
+    margin-right: 20px; }
+  .counterItem:nth-last-of-type(1) {
+    margin-bottom: 20px; }
+
+.totalCounter {
+  widht: 100%;
+  box-sizing: border-box;
+  padding: 20px 100px 0 0;
+  color: #c59eb5;
+  text-align: right;
+  border-top: 2px solid #fff; }
+
+.selectedItem {
+  background-color: #c59eb5; }
+
+/*# sourceMappingURL=serviceCounter.css.map */

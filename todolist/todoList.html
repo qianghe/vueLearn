@@ -1,0 +1,268 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="../awesome/css/font-awesome.css" rel="stylesheet"/>
+    <link href="todoList.css" rel="stylesheet"/>
+    <script src="../lib/vue.js" type="text/javascript"></script>
+    <meta charset="UTF-8">
+    <title>vue_example_todoList</title>
+</head>
+<body>
+<div class="todo-component">
+    <div class="todo-header">
+        <p>
+            <span class="todo-header-day">{{computedDay}}</span>
+            <span class="todo-header-num">{{todoItems.length}} items</span>
+        </p>
+        <p class="todo-header-month">{{computedMonth}}</p>
+    </div>
+    <div class="todo-input">
+        <span class="fa fa-plus add-icon"></span>
+        <input
+                ref="input"
+                placeholder="type sth you want do.."
+                v-model="inputText"
+                @keyup.enter="addTodoItem"
+        />
+    </div>
+    <ul class="todoList">
+        <todo-item
+                v-for="(todo,index) in showItems"
+                v-bind:name="todo.name"
+                v-bind:completed="todo.completed"
+                v-bind:index="index"
+        ></todo-item>
+    </ul>
+    <div class="todo-footer clearfix">
+        <div class="footer-action">
+            <todo-action
+                    v-for="(action,index) in todoActions"
+                    v-bind:name="action.name"
+                    v-bind:selected="action.selected"
+                    v-bind:index="index"
+            ></todo-action>
+        </div>
+        <div
+                class="todo-clear"
+                v-on:click="removeAllItem"
+        >clear all
+        </div>
+    </div>
+</div>
+</body>
+<script>
+
+    Vue.component('todo-action', {
+        props: {
+            name: {
+                type: String,
+                required: true
+            },
+            selected: {
+                type: Boolean,
+                required: true
+            },
+            index: {
+                type: Number,
+                required: true
+            }
+        },
+        render: function (createElement) {
+            var that = this;
+
+            return createElement('span', {
+                class: {
+                    selectedAction: this.selected
+                },
+                domProps: {
+                    innerHTML: this.name
+                },
+                on: {
+                    click: function () {
+                        todoComponent.$emit('filterItems', that.index);
+                    }
+                }
+            });
+        }
+    });
+
+    Vue.component('todo-item', {
+        props: {
+            name: {
+                type: String,
+                required: true
+            },
+            completed: {
+                type: Boolean,
+                required: true
+            },
+            index: {
+                type: Number,
+                required: true
+            }
+        },
+        render: function (createElement) {
+            var that = this;
+
+            return createElement('transition', {
+                attrs: {
+                    name: 'fade'
+                }
+            }, [createElement('li', {
+                        class: {
+                            activeItem: this.completed ? false : true,
+                            completedItem: this.completed ? true : false
+                        }
+                    }, [createElement('span', {
+                        on: {
+                            click: function () {
+                                todoComponent.$emit('toggleClass',that.index)
+                            }
+                        }
+                    }),
+                        createElement('span', {
+                            domProps: {
+                                innerHTML: this.name
+                            }
+                        }),
+                        createElement('span', {
+                            on: {
+                                click: function () {
+                                    todoComponent.$emit('removeItem',that.index)
+                                }
+                            }
+                        }, 'x')]
+            )]);
+
+        }
+    });
+
+    var todoComponent = new Vue({
+        el: '.todo-component',
+        data: {
+            inputText: '',
+            showItems: [],
+            filterType: 0,
+
+
+            todoItems: [
+                {name: 'to do a meaning thing', completed: false},
+                {name: 'to write a book', completed: false}
+            ],
+            todoActions: [
+                {name: 'All', selected: true},
+                {name: 'Active', selected: false},
+                {name: 'Completed', selected: false}
+            ]
+        },
+        created: function () {
+            this.showItems = this.todoItems;
+            this.showData = new Date();
+        },
+        computed: {
+            computedDay: function () {
+                var dayArr = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+                return dayArr[this.showData.getDay()] + ',' + this.showData.getDate() + 'th';
+            },
+            computedMonth: function () {
+                var monthArr = ['January', 'February', ' March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+                return monthArr[this.showData.getMonth()];
+            }
+        },
+        methods: {
+            addTodoItem: function () {
+                this.inputText = this.inputText.trim();
+
+                if (!this.inputText) return false;
+
+                this.todoItems.push({
+                    name: this.inputText,
+                    completed: false
+                })
+
+                this.showItems = this.todoItems;
+                this.inputText = '';
+                this.$refs.input.value = this.inputText;
+
+            },
+            delTodoItem: function (index) {
+                this.todoItems.splice(index, 1);
+            },
+            removeAllItem: function () {
+                var that = this;
+
+                // DOM 更新了
+                Vue.nextTick(function () {
+                    for (var i = 0; i < that.todoItems.length; i++) {
+                        that.showItems.pop();
+                        that.todoItems.pop();
+                    }
+                })
+
+
+            },
+            toggleTodoItem: function (index) {
+                this.todoItems[index].selected = true;
+
+                this.filterTodoItems(this.filterType);
+            }
+        }
+    })
+
+    todoComponent.$on('filterItems', function (index) {
+        //修改选择的filter的状态
+        this.todoActions.map(function (action) {
+            action.selected = false;
+        });
+        this.todoActions[index].selected = true;
+
+        console.log('index',index);
+
+        //修改todolist的展示数据
+        if (index == 0) {
+            this.filterType = 0;
+
+            this.showItems = this.todoItems.filter(function (item) {
+                return 1;
+            });
+        } else if (index == 1) {
+            this.filterType = 1;
+
+            this.showItems = this.todoItems.filter(function (item) {
+                if (!item.completed) return true;
+                return false;
+            });
+        } else {
+            this.filterType = 2;
+
+            this.showItems = this.todoItems.filter(function (item) {
+                if (item.completed) return true;
+                return false;
+            });
+        }
+    });
+
+    todoComponent.$on('toggleClass',function (index) {
+        this.todoItems[index].selected = true;
+
+        var that = this;
+
+        this.todoItems.forEach(function(todo){
+            if(todo == that.showItems[index]){
+                todo.completed = true;
+            }
+        });
+
+        todoComponent.$emit('filterItems',this.filterType);
+    });
+
+    todoComponent.$on('removeItem',function(index){
+        this.todoItems.splice(index, 1);
+
+        todoComponent.$emit('filterItems',this.filterType);
+    })
+</script>
+</html>
